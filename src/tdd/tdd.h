@@ -3,6 +3,7 @@
 
 #include "Testing.h"
 #include "Assert.h"
+#include "String.h"
 
 #define testing (tdd::Testing::getInstance())
 

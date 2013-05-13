@@ -16,6 +16,15 @@ public:
 	String(const std::string& s) : std::string(s) {}
 	String(const char* s) : std::string(s) {}
 	String(const char s) : std::string(std::string("") + s) {}
+	String(bool v) : std::string(std::to_string(v)) {}
+	String(int v) : std::string(std::to_string(v)) {}
+	String(unsigned int v) : std::string(std::to_string(v)) {}
+	String(long v) : std::string(std::to_string(v)) {}
+	String(unsigned long v) : std::string(std::to_string(v)) {}
+	String(long long v) : std::string(std::to_string(v)) {}
+	String(unsigned long long v) : std::string(std::to_string(v)) {}
+	String(float v) : std::string(std::to_string(v)) {}
+	String(double v) : std::string(std::to_string(v)) {}
 	operator std::string() const {return toString();}
 	std::string toString() const {return *this;}
 	
@@ -23,7 +32,6 @@ public:
 	String toUpper() const;
 	bool isWhitespace() const;
 	String trimWhitespace(bool front, bool middle, bool back) const;
-	int length() const = delete;
 	int lengthInBytes() const;
 	int lengthInCharacters() const;
 	bool startsWith(const String& s) const;

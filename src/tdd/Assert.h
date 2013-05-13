@@ -57,52 +57,52 @@ struct AssertionFailException : AssertionException {
 	virtual std::string getAssertionType() {return "assertFail";}
 };
 
-template<typename X, typename Y>
+
 struct AssertionEqualException : AssertionException {
-	AssertionEqualException(X xv, std::string xstr, Y yv, std::string ystr, AssertionPoint point)
+	AssertionEqualException(std::string xv, std::string xstr, std::string yv, std::string ystr, AssertionPoint point)
 	: AssertionException(constructMsg(xv,xstr,yv,ystr), point) {}
 	virtual std::string getAssertionType() {return "assertEqual";}
 private:
-	std::string constructMsg(X xv, std::string xstr, Y yv, std::string ystr) {
+	std::string constructMsg(std::string xv, std::string xstr, std::string yv, std::string ystr) {
 		std::string str = xstr + " != " + ystr + newline;
 		str += std::string("since [") + xv + "] != [" + yv + "]";
 		return str;
 	}
 };
 
-template<typename X, typename Y>
+
 struct AssertionUnequalException : AssertionException {
-	AssertionUnequalException(X xv, std::string xstr, Y yv, std::string ystr, AssertionPoint point)
+	AssertionUnequalException(std::string xv, std::string xstr, std::string yv, std::string ystr, AssertionPoint point)
 	: AssertionException(constructMsg(xv,xstr,yv,ystr), point) {}
 	virtual std::string getAssertionType() {return "assertUnequal";}
 private:
-	std::string constructMsg(X xv, std::string xstr, Y yv, std::string ystr) {
+	std::string constructMsg(std::string xv, std::string xstr, std::string yv, std::string ystr) {
 		std::string str = xstr + " == " + ystr + newline;
 		str += std::string("since [") + xv + "] == [" + yv + "]";
 		return str;
 	}
 };
 
-template<typename X, typename Y>
+
 struct AssertionLessThanException : AssertionException {
-	AssertionLessThanException(X xv, std::string xstr, Y yv, std::string ystr, AssertionPoint point)
+	AssertionLessThanException(std::string xv, std::string xstr, std::string yv, std::string ystr, AssertionPoint point)
 	: AssertionException(constructMsg(xv,xstr,yv,ystr), point) {}
 	virtual std::string getAssertionType() {return "assertLessThan";}
 private:
-	std::string constructMsg(X xv, std::string xstr, Y yv, std::string ystr) {
+	std::string constructMsg(std::string xv, std::string xstr, std::string yv, std::string ystr) {
 		std::string str = xstr + " >= " + ystr + newline;
 		str += std::string("since [") + xv + "] >= [" + yv + "]";
 		return str;
 	}
 };
 
-template<typename X, typename Y>
+
 struct AssertionGreaterThanException : AssertionException {
-	AssertionGreaterThanException(X xv, std::string xstr, Y yv, std::string ystr, AssertionPoint point)
+	AssertionGreaterThanException(std::string xv, std::string xstr, std::string yv, std::string ystr, AssertionPoint point)
 	: AssertionException(constructMsg(xv,xstr,yv,ystr), point) {}
 	virtual std::string getAssertionType() {return "assertGreaterThan";}
 private:
-	std::string constructMsg(X xv, std::string xstr, Y yv, std::string ystr) {
+	std::string constructMsg(std::string xv, std::string xstr, std::string yv, std::string ystr) {
 		std::string str = xstr + " <= " + ystr + newline;
 		str += std::string("since [") + xv + "] <= [" + yv + "]";
 		return str;
@@ -136,16 +136,17 @@ template<typename T> void __mythrow(const T& v) {throw std::shared_ptr<Assertion
 #define assertTrue(X) if (!(X)) {tdd::__mythrow(tdd::AssertionTrueException(#X,__FFL));}
 #define assertFalse(X) if (X) {tdd::__mythrow(tdd::AssertionFalseException(#X,__FFL));}
 #define assertEqual(X,Y) {auto __x = (X); auto __y = (Y); if (!(__x == __y)) { \
-	tdd::__mythrow(tdd::AssertionEqualException<decltype(__x),decltype(__y)>(__x,#X,__y,#Y,__FFL));}}
+	tdd::__mythrow(tdd::AssertionEqualException(tdd::String(__x),#X,tdd::String(__y),#Y,__FFL));}}
 #define assertUnequal(X,Y) {auto __x = (X); auto __y = (Y); if (!(__x != __y)) { \
-	tdd::__mythrow(tdd::AssertionUnequalException<decltype(__x),decltype(__y)>(__x,#X,__y,#Y,__FFL));}}
+	tdd::__mythrow(tdd::AssertionUnequalException(tdd::String(__x),#X,tdd::String(__y),#Y,__FFL));}}
 #define assertLessThan(X,Y) {auto __x = (X); auto __y = (Y); if (!(__x < __y)) { \
-	tdd::__mythrow(tdd::AssertionLessThanException<decltype(__x),decltype(__y)>(__x,#X,__y,#Y,__FFL));}}
+	tdd::__mythrow(tdd::AssertionLessThanException(tdd::String(__x),#X,tdd::String(__y),#Y,__FFL));}}
 #define assertGreaterThan(X,Y) {auto __x = (X); auto __y = (Y); if (!(__x > __y)) { \
-	tdd::__mythrow(tdd::AssertionGreaterThanException<decltype(__x),decltype(__y)>(__x,#X,__y,#Y,__FFL));}}
+	tdd::__mythrow(tdd::AssertionGreaterThanException(tdd::String(__x),#X,tdd::String(__y),#Y,__FFL));}}
 #define assertClose(X,Y) {auto __x = (X); auto __y = (Y); if (!tdd::Util::getInstance().almostEqual(__x,__y)) { \
 	tdd::__mythrow(tdd::AssertionCloseException(__x,#X,__y,#Y,__FFL));}}
-#define assertCloserThan(X,Y,PRECISION) {auto __x = (X); auto __y = (Y); auto __precision = (PRECISION); if (!tdd::Util::getInstance().almostEqual(__x,__y,__precision)) { \
+#define assertCloserThan(X,Y,PRECISION) {auto __x = (X); auto __y = (Y); auto __precision = (PRECISION); \
+	if (!	tdd::Util::getInstance().almostEqual(__x,__y,__precision)) { \
 	tdd::__mythrow(tdd::AssertionCloserThanException(__x,#X,__y,#Y,__precision,#PRECISION,__FFL));}}
 
 
